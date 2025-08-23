@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Word Scramble Game</title>
+  
+  <style>
+    /* THEME VARIABLES from Hangman */
+    :root {
+      --bg: #fffaf2;
+      --card: #fff4e0;
+      --ink: #1e1400;
+      --muted: #6b5b3e;
+      --accent: #ff9f1a;
+      --accent-2: #ffd166;
+      --good: #1ecb4f;
+      --bad: #ff3b3b;
+      --outline: rgba(0, 0, 0, .08);
+      --outline-strong: rgba(0, 0, 0, .14);
+      --shadow: 0 10px 30px rgba(0, 0, 0, .15);
+      --input-bg: #fff;
+      --btn-ghost: #ffe6b5;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0f12;
+      --card: #16171c;
+      --ink: #f7f3ea;
+      --muted: #d8c9aa;
+      --accent: #ff9f1a;
+      --accent-2: #ffd166;
+      --good: #70e000;
+      --bad: #ff4d4d;
+      --outline: rgba(255, 255, 255, .06);
+      --outline-strong: rgba(255, 255, 255, .12);
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --input-bg: #1e1f25;
+      --btn-ghost: #1a1b21;
+    }
+    
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      transition: background .25s ease, color .25s ease;
+      text-align: center;
+    }
+    
+    .container {
+      flex: 1;
+      width: min(900px, 100%);
+      margin: auto;
+      display: grid;
+      gap: 18px;
+    }
+    
+    header {
+      padding: 12px 8px 0;
+      position: relative;
+    }
+    
+    h1 {
+      font-size: clamp(24px, 4vw, 40px);
+      margin: 0 0 6px;
+    }
+    
+    .note {
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    
+    .tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #101012;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .1em;
+      box-shadow: var(--shadow);
+    }
+    
+    .theme-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--outline);
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      background: var(--card);
+      color: var(--ink);
+      border: 1px solid var(--outline-strong);
+    }
+    
+    .card {
+      background: var(--card);
+      border: 1px solid var(--outline);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    input[type="text"] {
+      width: 80%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--outline-strong);
+      background: var(--input-bg);
+      color: var(--ink);
+      transition: background .25s ease, color .25s ease;
+      margin-top: 8px;
+    }
+    input[type="password"] {
+      width: 80%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--outline-strong);
+      background: var(--input-bg);
+      color: var(--ink);
+      transition: background .25s ease, color .25s ease;
+      margin-top: 8px;
+    }
+    
+    
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 4px;
+      box-shadow: var(--shadow);
+    }
+    
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #101012;
+    }
+    
+    .btn-ghost {
+      background: var(--btn-ghost);
+      color: var(--ink);
+    }
+    
+    .word-display {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      letter-spacing: 0.2rem;
+      min-height: 2.5rem;
+    }
+    
+    #message {
+      min-height: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .hint-container {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hint-container .hint-box {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--muted);
+    }
+     .header-buttons-container {
+  position: absolute;
+  top: 0;
+  left: 0; /* Changed from 'right: 0' to 'left: 0' */
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+.ad-box {
+      margin: 16px 0;
+      border: 1px dashed var(--outline-strong);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+       <div class="header-buttons-container">
+        <a href="index.html" class="theme-toggle" style="text-decoration: none;">
+            <span id="homeIcon" aria-hidden="true">🏠</span>
+            <span id="homeLabel">Home</span>
+        </a>
+        </div>
+      <button id="themeToggle" class="theme-toggle" onclick="toggleMode()">🌙 Dark</button>
+      <div class="tag">VINTAGE GAME • JUST FOR FUN</div>
+      <h1>Word Scramble Game</h1>
+      <p class="note">Player 1: Enter a word & hint → It will scramble → Player 2: Guess the word!</p>
+     <!-- AdSense Placeholder: Header (replace with your AdSense code when approved) -->
+            <div class="ad-box">Header Ad Placeholder (728x90 / responsive)</div>
+    </header>
+    
+    <div class="card">
+      <div class="input-group">
+        <label for="playerWord" style="font-weight: bold; color: var(--ink);">Player 1: Enter Word</label>
+        <input type="password" id="playerWord" placeholder="Enter a word">
+      </div>
+      <div class="input-group">
+        <label for="hintInput" style="font-weight: bold; color: var(--ink);">Player 1: Enter Hint (Optional)</label>
+        <input type="password" id="hintInput" placeholder="Enter a clue for the word">
+      </div>
+      <button class="btn-accent" onclick="setWord()">Scramble</button>
+      
+      <div class="word-display" id="scrambledWord">------</div>
+      
+      <div class="hint-container">
+        <button class="btn-ghost" onclick="giveHint()">Give Hint</button>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+      
+      <input type="text" id="guessInput" placeholder="Player 2, type your guess...">
+      <br>
+      <button class="btn-accent" onclick="checkGuess()">Check</button>
+      <button class="btn-ghost" onclick="resetGame()">Reset</button>
+      <p id="message"></p>
+    </div>
+  </div>
+
+  <script>
+    let correctWord = "";
+    let customHint = "";
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const hintBox = document.getElementById('hintBox');
+
+    function scrambleWord(word) {
+      let shuffled = word.split('').sort(() => 0.5 - Math.random()).join('');
+      while (shuffled === word) {
+        shuffled = word.split('').sort(() => 0.5 - Math.random()).join('');
+      }
+      return shuffled;
+    }
+
+    function setWord() {
+      let word = document.getElementById("playerWord").value.trim().toUpperCase();
+      if (!word || word.length < 3) {
+        alert("Player 1, please enter a word with at least 3 letters!");
+        return;
+      }
+      correctWord = word;
+      customHint = document.getElementById("hintInput").value.trim();
+      
+      let scrambled = scrambleWord(word);
+      document.getElementById("scrambledWord").textContent = scrambled;
+      document.getElementById("message").textContent = "";
+      document.getElementById("guessInput").value = "";
+      hintBox.textContent = "";
+    }
+
+    function checkGuess() {
+      let guess = document.getElementById("guessInput").value.trim().toUpperCase();
+      const messageElement = document.getElementById("message");
+      if (!guess) {
+        messageElement.textContent = "Please enter your guess.";
+        return;
+      }
+      if (guess === correctWord) {
+        messageElement.textContent = "✅ Correct! You win!";
+      } else {
+        messageElement.textContent = "❌ Wrong! Try again.";
+      }
+    }
+
+    function resetGame() {
+      correctWord = "";
+      customHint = "";
+      document.getElementById("playerWord").value = "";
+      document.getElementById("hintInput").value = "";
+      document.getElementById("scrambledWord").textContent = "------";
+      document.getElementById("guessInput").value = "";
+      document.getElementById("message").textContent = "";
+      hintBox.textContent = "";
+    }
+
+    function giveHint() {
+      if (!correctWord) {
+        alert("First, a word needs to be scrambled!");
+        return;
+      }
+      if (!customHint) {
+        alert("The hint was not provided by Player 1.");
+        return;
+      }
+      hintBox.textContent = `Hint: "${customHint}"`;
+    }
+
+    function toggleMode() {
+      const htmlElement = document.documentElement;
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        htmlElement.removeAttribute('data-theme');
+        themeToggleBtn.textContent = '🌙 Dark';
+      } else {
+        htmlElement.setAttribute('data-theme', 'dark');
+        themeToggleBtn.textContent = '☀️ Light';
+      }
+    }
+  </script>
+</body>
+</html>

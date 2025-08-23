@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Schoolyard Games Club</title>
+
+    <style>
+        /* THEME VARIABLES */
+        :root {
+            /* Light theme (auto when user's system is light) */
+            --bg: #fffaf2;
+            --card: #fff4e0;
+            --ink: #1e1400;
+            --muted: #6b5b3e;
+            --accent: #ff9f1a; /* orange */
+            --accent-2: #ffd166; /* gold */
+            --good: #1ecb4f;
+            --bad: #ff3b3b;
+            --outline: rgba(0, 0, 0, .08);
+            --outline-strong: rgba(0, 0, 0, .14);
+            --chip-outline: rgba(0, 0, 0, .18);
+            --shadow: 0 10px 30px rgba(0, 0, 0, .15);
+            --input-bg: #fff;
+            --btn-ghost: #ffe6b5;
+            --result-dash: rgba(0, 0, 0, .2);
+            --radial-1: #ffe0b2;
+            --radial-2: #ffebc2;
+        }
+
+        /* Dark palette (will be enabled by [data-theme="dark"] or system pref) */
+        [data-theme="dark"] {
+            --bg: #0f0f12;
+            --card: #16171c;
+            --ink: #f7f3ea;
+            --muted: #d8c9aa;
+            --accent: #ff9f1a; /* orange */
+            --accent-2: #ffd166; /* gold */
+            --good: #70e000;
+            --bad: #ff4d4d;
+            --outline: rgba(255, 255, 255, .06);
+            --outline-strong: rgba(255, 255, 255, .12);
+            --chip-outline: rgba(255, 255, 255, .16);
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+            --input-bg: #0e0f14;
+            --btn-ghost: #1a1b21;
+            --result-dash: rgba(255, 255, 255, .2);
+            --radial-1: #2a1f0b;
+            --radial-2: #1f1b0b;
+        }
+
+        /* Respect system preference by default; JS can override with [data-theme] */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-user-theme]) {
+                --bg: #0f0f12;
+                --card: #16171c;
+                --ink: #f7f3ea;
+                --muted: #d8c9aa;
+                --accent: #ff9f1a;
+                --accent-2: #ffd166;
+                --good: #70e000;
+                --bad: #ff4d4d;
+                --outline: rgba(255, 255, 255, .06);
+                --outline-strong: rgba(255, 255, 255, .12);
+                --chip-outline: rgba(255, 255, 255, .16);
+                --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+                --input-bg: #0e0f14;
+                --btn-ghost: #1a1b21;
+                --result-dash: rgba(255, 255, 255, .2);
+                --radial-1: #2a1f0b;
+                --radial-2: #1f1b0b;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            background:
+                radial-gradient(60vmax 60vmax at -10% -20%, var(--radial-1) 0%, transparent 60%),
+                radial-gradient(70vmax 70vmax at 120% 110%, var(--radial-2) 0%, transparent 60%),
+                var(--bg);
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 24px;
+            transition: background .25s ease, color .25s ease;
+        }
+        
+        .container {
+            flex: 1;
+            width: min(980px, 100%);
+            margin: auto;
+            text-align: center;
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            padding: 12px 8px 0;
+        }
+        
+        h1 {
+            color: var(--ink);
+            margin-bottom: 20px;
+            font-size: clamp(24px, 4vw, 40px);
+            margin: 0 0 6px
+        }
+
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: .1em;
+            box-shadow: var(--shadow)
+        }
+
+        /* theme toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            color: var(--ink);
+            border: 1px solid var(--outline);
+            padding: 8px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+            justify-content: center;
+        }
+
+        .game-tile {
+            background: var(--card);
+            border: 1px solid var(--outline);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .game-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-tile h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .note {
+          color: var(--muted);
+          margin: 0 0 12px;
+        }
+        .ad-box {
+      margin: 16px 0;
+      border: 1px dashed var(--outline-strong);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle light/dark">
+                <span id="themeIcon" aria-hidden="true">🌙</span>
+                <span id="themeLabel">Dark</span>
+            </button>
+            <div class="tag">VINTAGE GAMES • JUST FOR FUN</div>
+            <h1>The Schoolyard Games Club</h1>
+            <p class="note">A collection of classic games from a simpler time.</p>
+             <!-- AdSense Placeholder: Header (replace with your AdSense code when approved) -->
+            <div class="ad-box">Header Ad Placeholder (728x90 / responsive)</div>
+        </header>
+
+        <div class="game-grid">
+            <a href="flames.html" class="game-tile">
+                <h2>Flames</h2>
+            </a>
+            <a href="book-cricket.html" class="game-tile">
+                <h2>Book Cricket</h2>
+            </a>
+            <a href="hangman.html" class="game-tile">
+                <h2>Hangman</h2>
+            </a>
+            <a href="word-scramble.html" class="game-tile">
+                <h2>Word Scramble</h2>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        /* ========= THEME (system default + manual toggle with persistence) ========= */
+        (function initTheme() {
+            const root = document.documentElement;
+            const saved = localStorage.getItem('flames-theme'); // 'light' | 'dark' | null
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            function applyTheme(mode, fromUser = false) {
+                if (mode === 'dark') {
+                    root.setAttribute('data-theme', 'dark');
+                    root.setAttribute('data-user-theme', 'true');
+                    themeToggle.setAttribute('aria-pressed', 'true');
+                    themeIcon.textContent = '☀️';
+                    themeLabel.textContent = 'Light';
+                    if (fromUser) localStorage.setItem('flames-theme', 'dark');
+                } else if (mode === 'light') {
+                    root.removeAttribute('data-theme'); // fall back to light variables
+                    root.setAttribute('data-user-theme', 'true');
+                    themeToggle.setAttribute('aria-pressed', 'false');
+                    themeIcon.textContent = '🌙';
+                    themeLabel.textContent = 'Dark';
+                    if (fromUser) localStorage.setItem('flames-theme', 'light');
+                } else {
+                    // system default
+                    root.removeAttribute('data-user-theme');
+                    prefersDark ? root.setAttribute('data-theme', 'dark') : root.removeAttribute('data-theme');
+                    themeToggle.setAttribute('aria-pressed', prefersDark ? 'true' : 'false');
+                    themeIcon.textContent = prefersDark ? '☀️' : '🌙';
+                    themeLabel.textContent = prefersDark ? 'Light' : 'Dark';
+                    localStorage.removeItem('flames-theme');
+                }
+            }
+
+            // Elements
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+
+            // Initial apply (respect saved > system)
+            if (saved === 'dark' || saved === 'light') {
+                applyTheme(saved, false);
+            } else {
+                applyTheme(null, false); // system
+            }
+
+            // Toggle behavior: cycles between user light/dark (not system auto)
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                applyTheme(isDark ? 'light' : 'dark', true);
+            });
+
+            // If system changes and user has NOT set a preference, update
+            if (window.matchMedia) {
+                const mq = window.matchMedia('(prefers-color-scheme: dark)');
+                mq.addEventListener?.('change', () => {
+                    if (!localStorage.getItem('flames-theme')) applyTheme(null, false);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Primary SEO -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FLAMES Calculator — Classic Fun Game (Friends, Love, Affection, Marriage, Enemies, Siblings)</title>
+    <meta name="description"
+        content="Play the classic FLAMES game online! Enter two names and find out if you’re Friends, Love, Affection, Marriage, Enemies, or Siblings. Purely a fun, vintage game — not serious or scientific." />
+    <meta name="keywords"
+        content="FLAMES calculator, FLAMES game online, love calculator game, name compatibility game, fun relationship game, vintage schoolyard game" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#ff9f1a" />
+
+    <!-- Open Graph (optional but helpful) -->
+    <meta property="og:title" content="FLAMES Calculator — Classic Fun Game" />
+    <meta property="og:description" content="Enter two names and see your FLAMES result. Just for fun — not serious!" />
+    <meta property="og:type" content="website" />
+
+    <!-- FAQ Structured Data -->
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does FLAMES stand for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FLAMES stands for Friends, Love, Affection, Marriage, Enemies, and Siblings. It's a nostalgic schoolyard game — just for fun."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the FLAMES calculator accurate or scientific?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. It's only for entertainment. Results are not scientific, predictive, or serious."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the FLAMES calculator work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Remove common letters between the two names, count the remaining letters, then continuously eliminate letters from the word FLAMES in a circular fashion using that count until one remains."
+        }
+      }
+    ]
+  }
+  </script>
+
+    <style>
+        /* THEME VARIABLES */
+        :root {
+            /* Light theme (auto when user's system is light) */
+            --bg: #fffaf2;
+            --card: #fff4e0;
+            --ink: #1e1400;
+            --muted: #6b5b3e;
+            --accent: #ff9f1a;
+            /* orange */
+            --accent-2: #ffd166;
+            /* gold */
+            --good: #1ecb4f;
+            --bad: #ff3b3b;
+            --outline: rgba(0, 0, 0, .08);
+            --outline-strong: rgba(0, 0, 0, .14);
+            --chip-outline: rgba(0, 0, 0, .18);
+            --shadow: 0 10px 30px rgba(0, 0, 0, .15);
+            --input-bg: #fff;
+            --btn-ghost: #ffe6b5;
+            --result-dash: rgba(0, 0, 0, .2);
+            --radial-1: #ffe0b2;
+            --radial-2: #ffebc2;
+        }
+
+        /* Dark palette (will be enabled by [data-theme="dark"] or system pref) */
+        [data-theme="dark"] {
+            --bg: #0f0f12;
+            --card: #16171c;
+            --ink: #f7f3ea;
+            --muted: #d8c9aa;
+            --accent: #ff9f1a;
+            /* orange */
+            --accent-2: #ffd166;
+            /* gold */
+            --good: #70e000;
+            --bad: #ff4d4d;
+            --outline: rgba(255, 255, 255, .06);
+            --outline-strong: rgba(255, 255, 255, .12);
+            --chip-outline: rgba(255, 255, 255, .16);
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+            --input-bg: #0e0f14;
+            --btn-ghost: #1a1b21;
+            --result-dash: rgba(255, 255, 255, .2);
+            --radial-1: #2a1f0b;
+            --radial-2: #1f1b0b;
+        }
+
+        /* Respect system preference by default; JS can override with [data-theme] */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-user-theme]) {
+                --bg: #0f0f12;
+                --card: #16171c;
+                --ink: #f7f3ea;
+                --muted: #d8c9aa;
+                --accent: #ff9f1a;
+                --accent-2: #ffd166;
+                --good: #70e000;
+                --bad: #ff4d4d;
+                --outline: rgba(255, 255, 255, .06);
+                --outline-strong: rgba(255, 255, 255, .12);
+                --chip-outline: rgba(255, 255, 255, .16);
+                --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+                --input-bg: #0e0f14;
+                --btn-ghost: #1a1b21;
+                --result-dash: rgba(255, 255, 255, .2);
+                --radial-1: #2a1f0b;
+                --radial-2: #1f1b0b;
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            background:
+                radial-gradient(60vmax 60vmax at -10% -20%, var(--radial-1) 0%, transparent 60%),
+                radial-gradient(70vmax 70vmax at 120% 110%, var(--radial-2) 0%, transparent 60%),
+                var(--bg);
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 24px;
+            transition: background .25s ease, color .25s ease;
+        }
+
+        .container {
+            flex: 1;
+            width: min(980px, 100%);
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1fr;
+            margin: auto;
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            padding: 12px 8px 0;
+        }
+
+        h1 {
+            font-size: clamp(24px, 4vw, 40px);
+            margin: 0 0 6px
+        }
+
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: .1em;
+            box-shadow: var(--shadow)
+        }
+
+        /* theme toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            color: var(--ink);
+            border: 1px solid var(--outline);
+            padding: 8px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            filter: brightness(1.03)
+        }
+
+        .grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 800px) {
+            .grid {
+                grid-template-columns: 1.2fr .8fr;
+            }
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+            border: 1px solid var(--outline);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(6px);
+        }
+
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin: 10px 0 6px
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--outline-strong);
+            background: var(--input-bg);
+            color: var(--ink);
+            outline: none;
+            font-size: 16px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px
+        }
+
+        button {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            background: #fff0d6;
+            color: var(--ink);
+            box-shadow: var(--shadow);
+            transition: transform .06s ease, filter .2s ease, background .2s ease;
+        }
+
+        [data-theme="dark"] button {
+            background: #23242b;
+            color: var(--ink);
+        }
+
+        button:hover {
+            filter: brightness(1.06)
+        }
+
+        button:active {
+            transform: translateY(1px)
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012
+        }
+
+        .btn-ghost {
+            background: var(--btn-ghost)
+        }
+
+        .result {
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px dashed var(--result-dash);
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .big-letter {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: .1em;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .meaning {
+            font-size: 18px
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        details {
+            background: #fff3e0;
+            border-radius: 12px;
+            padding: 12px 12px;
+            border: 1px solid var(--outline);
+            margin-top: 12px;
+        }
+
+        [data-theme="dark"] details {
+            background: #121318;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 700
+        }
+
+        .flames-strip {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            padding: 8px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--chip-outline);
+            font-weight: 700
+        }
+
+        .round-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 6px 0;
+        }
+
+        .chip.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012;
+            border: none
+        }
+
+        .disclaimer {
+            color: #101012;
+            background: var(--bad);
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .disclaimer {
+            color: #fff;
+        }
+
+        /* Simple ad placeholders */
+        .ad-box {
+            margin: 16px 0;
+            border: 1px dashed var(--outline-strong);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(0, 0, 0, 0));
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 20px
+        }
+     .header-buttons-container {
+  position: absolute;
+  top: 0;
+  left: 0; /* Changed from 'right: 0' to 'left: 0' */
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+.ad-box {
+      margin: 16px 0;
+      border: 1px dashed var(--outline-strong);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+             <div class="header-buttons-container">
+        <a href="index.html" class="theme-toggle" style="text-decoration: none;">
+            <span id="homeIcon" aria-hidden="true">🏠</span>
+            <span id="homeLabel">Home</span>
+        </a>
+        </div>
+            <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle light/dark">
+                <span id="themeIcon" aria-hidden="true">🌙</span>
+                <span id="themeLabel">Dark</span>
+            </button>
+
+            <div class="tag">VINTAGE GAME • JUST FOR FUN</div>
+            <h1>FLAMES Calculator</h1>
+            <p class="note">Enter two names and see your FLAMES result. This is a nostalgic pastime and
+                <strong>not</strong> a scientific or serious tool.</p>
+
+            <!-- AdSense Placeholder: Header (replace with your AdSense code when approved) -->
+            <div class="ad-box">Header Ad Placeholder (728x90 / responsive)</div>
+            <!-- Example AdSense snippet to paste when ready:
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-CLIENT-ID" crossorigin="anonymous"></script>
+      <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-CLIENT-ID" data-ad-slot="SLOT-ID" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+        </header>
+
+        <div class="grid">
+            <!-- Left: Calculator -->
+            <section class="card" aria-labelledby="calc-title">
+                <h2 id="calc-title" style="margin-top:0">Calculator</h2>
+                <label for="name1">Your Name</label>
+                <input id="name1" type="text" placeholder="e.g., Rahul" autocomplete="off" />
+                <label for="name2">Partner's Name</label>
+                <input id="name2" type="text" placeholder="e.g., Priya" autocomplete="off" />
+
+                <div class="controls">
+                    <button id="btnCalc" class="btn-accent">Calculate FLAMES</button>
+                    <button id="btnSwap" class="btn-ghost" title="Swap names">Swap</button>
+                    <button id="btnReset" class="btn-ghost" title="Clear all">Reset</button>
+                </div>
+
+                <div id="result" class="result" role="status" aria-live="polite" style="margin-top:14px">
+                    <span class="note">Result will appear here.</span>
+                </div>
+
+                <details>
+                    <summary>Show steps (how the count is found & elimination works)</summary>
+                    <div id="steps" class="note" style="margin-top:10px"></div>
+                </details>
+            </section>
+
+            <!-- Right: Info -->
+            <aside class="card" aria-labelledby="info-title">
+                <h2 id="info-title" style="margin-top:0">What does FLAMES mean?</h2>
+                <p class="note">Traditionally, each letter stands for a type of relationship:</p>
+                <div class="flames-strip" aria-label="FLAMES legend">
+                    <div class="chip">F — Friends</div>
+                    <div class="chip">L — Love</div>
+                    <div class="chip">A — Affection</div>
+                    <div class="chip">M — Marriage</div>
+                    <div class="chip">E — Enemies</div>
+                    <div class="chip">S — Siblings</div>
+                </div>
+                <p class="note" style="margin-top:12px">
+                    <strong>How it works (classic method):</strong> remove common letters between the two names, count
+                    the remaining letters, then use that count to eliminate letters from the word <em>FLAMES</em> in a
+                    circular fashion until one letter remains.
+                </p>
+                <details>
+                    <summary>Why the count works</summary>
+                    <p class="note">If <em>n</em> is the number of non-cancelled letters after striking common letters,
+                        start with the list [F,L,A,M,E,S]. Repeatedly remove the letter at index
+                        <code>(currentIndex + n - 1) mod length</code> and continue from the next position, until one
+                        letter remains.</p>
+                </details>
+                <div class="disclaimer">
+                    ⚠️ Disclaimer: This mini-app is purely for entertainment — a vintage schoolyard game. Not an
+                    acknowledgement, prediction, or advice.
+                </div>
+
+                <!-- AdSense Placeholder: Sidebar/Box -->
+                <div class="ad-box">Sidebar/Box Ad Placeholder (300x250 / responsive)</div>
+            </aside>
+        </div>
+
+        <footer>
+            <!-- Footer Ad -->
+            <div class="ad-box">Footer Ad Placeholder (responsive)</div>
+            Built with plain HTML, CSS, and JavaScript. No tracking, no storage — everything runs in your browser.
+        </footer>
+    </div>
+
+    <script>
+        /* ========= THEME (system default + manual toggle with persistence) ========= */
+        (function initTheme() {
+            const root = document.documentElement;
+            const saved = localStorage.getItem('flames-theme'); // 'light' | 'dark' | null
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            function applyTheme(mode, fromUser = false) {
+                if (mode === 'dark') {
+                    root.setAttribute('data-theme', 'dark');
+                    root.setAttribute('data-user-theme', 'true');
+                    themeToggle.setAttribute('aria-pressed', 'true');
+                    themeIcon.textContent = '☀️';
+                    themeLabel.textContent = 'Light';
+                    if (fromUser) localStorage.setItem('flames-theme', 'dark');
+                } else if (mode === 'light') {
+                    root.removeAttribute('data-theme'); // fall back to light variables
+                    root.setAttribute('data-user-theme', 'true');
+                    themeToggle.setAttribute('aria-pressed', 'false');
+                    themeIcon.textContent = '🌙';
+                    themeLabel.textContent = 'Dark';
+                    if (fromUser) localStorage.setItem('flames-theme', 'light');
+                } else {
+                    // system default
+                    root.removeAttribute('data-user-theme');
+                    prefersDark ? root.setAttribute('data-theme', 'dark') : root.removeAttribute('data-theme');
+                    themeToggle.setAttribute('aria-pressed', prefersDark ? 'true' : 'false');
+                    themeIcon.textContent = prefersDark ? '☀️' : '🌙';
+                    themeLabel.textContent = prefersDark ? 'Light' : 'Dark';
+                    localStorage.removeItem('flames-theme');
+                }
+            }
+
+            // Elements
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+
+            // Initial apply (respect saved > system)
+            if (saved === 'dark' || saved === 'light') {
+                applyTheme(saved, false);
+            } else {
+                applyTheme(null, false); // system
+            }
+
+            // Toggle behavior: cycles between user light/dark (not system auto)
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                applyTheme(isDark ? 'light' : 'dark', true);
+            });
+
+            // If system changes and user has NOT set a preference, update
+            if (window.matchMedia) {
+                const mq = window.matchMedia('(prefers-color-scheme: dark)');
+                mq.addEventListener?.('change', () => {
+                    if (!localStorage.getItem('flames-theme')) applyTheme(null, false);
+                });
+            }
+        })();
+
+        /* ====================== FLAMES CALCULATOR LOGIC ======================= */
+        const el = (id) => document.getElementById(id);
+        const resultBox = el('result');
+        const stepsBox = el('steps');
+
+        const MEANINGS = {
+            F: { title: 'Friends', hint: 'You vibe as buddies.' },
+            L: { title: 'Love', hint: 'Sparks and romance vibes.' },
+            A: { title: 'Affection', hint: 'Warm, caring feelings.' },
+            M: { title: 'Marriage', hint: 'A long-term pair energy (in game!).' },
+            E: { title: 'Enemies', hint: 'Playful rivalry only. Be kind IRL.' },
+            S: { title: 'Siblings', hint: 'Like family, protective bond.' }
+        };
+
+        function sanitizeName(str) {
+            return (str || '')
+                .toLowerCase()
+                .normalize('NFD').replace(/\p{Diacritic}/gu, '') // strip diacritics
+                .replace(/[^a-z]/g, ''); // keep letters only
+        }
+
+        function strikeCommonLetters(a, b) {
+            const arrA = a.split('');
+            const arrB = b.split('');
+            for (let i = 0; i < arrA.length; i++) {
+                const ch = arrA[i];
+                const j = arrB.indexOf(ch);
+                if (j !== -1) {
+                    arrA[i] = null;
+                    arrB[j] = null;
+                }
+            }
+            const remainingA = arrA.filter(c => c !== null);
+            const remainingB = arrB.filter(c => c !== null);
+            return { remainingA, remainingB };
+        }
+
+        function flames(count) {
+            let arr = ['F', 'L', 'A', 'M', 'E', 'S'];
+            let idx = 0;
+            const rounds = [];
+            while (arr.length > 1) {
+                idx = (idx + count - 1) % arr.length;    // removal index
+                rounds.push({ removed: arr[idx], idx, before: arr.join('') });
+                arr.splice(idx, 1);                        // remove
+            }
+            return { letter: arr[0], rounds };
+        }
+
+        function renderSteps(name1, name2, remainingA, remainingB, n, rounds) {
+            const fmt = (s) => s.map(ch =>
+                `<span style="display:inline-block;padding:.1em .18em;border-radius:6px;border:1px solid var(--chip-outline);margin:.06em">${ch}</span>`
+            ).join('');
+
+            const rHtml = rounds.map((r, i) => {
+                // const pre = r.before.split('').map((ch, k) =>
+                //   `<span class="chip ${k===r.idx? 'active':''}" style="margin:4px 6px 4px 0">${ch}</span>`
+                // ).join('');
+                const pre = `<div class="round-row">` +
+                    r.before.split('').map((ch, k) =>
+                        `<span class="chip ${k === r.idx ? 'active' : ''}">${ch}</span>`
+                    ).join('') +
+                    `</div>`;
+
+                return `<div style="margin:6px 0"><div class="note">Round ${i + 1}: remove at count <strong>${n}</strong></div><div>${pre}</div><div class="note">Removed: <strong>${r.removed}</strong></div></div>`;
+            }).join('');
+
+            stepsBox.innerHTML = `
+        <div class="note" style="margin:2px 0 8px">Sanitized names → <strong>${name1}</strong> & <strong>${name2}</strong></div>
+        <div class="note">Remaining after striking common letters:</div>
+        <div style="margin-top:6px">${fmt(remainingA)} <span class="note">(${remainingA.length})</span></div>
+        <div style="margin-top:6px">${fmt(remainingB)} <span class="note">(${remainingB.length})</span></div>
+        <div style="margin-top:8px">Total count <strong>n = ${n}</strong></div>
+        <hr style="opacity:.15;border:none;border-top:1px solid var(--outline-strong);margin:10px 0" />
+        <div>${rHtml || '<span class="note">n is 0 — special case, nothing to eliminate.</span>'}</div>
+      `;
+        }
+
+        function showResult(letter) {
+            const info = MEANINGS[letter];
+            resultBox.innerHTML = `
+        <div class="big-letter" aria-label="Result letter">${letter}</div>
+        <div class="meaning"><strong>${info.title}</strong><div class="note">${info.hint}</div></div>
+      `;
+        }
+
+        function showMessage(msg) {
+            resultBox.innerHTML = `<span class="note">${msg}</span>`;
+        }
+
+        function calculate() {
+            let a = sanitizeName(el('name1').value);
+            let b = sanitizeName(el('name2').value);
+
+            if (!a || !b) {
+                showMessage('Please enter both names. Letters only are considered.');
+                stepsBox.innerHTML = '';
+                return;
+            }
+
+            const { remainingA, remainingB } = strikeCommonLetters(a, b);
+            const n = remainingA.length + remainingB.length;
+
+            if (n === 0) {
+                renderSteps(a, b, remainingA, remainingB, n, []);
+                showResult('L'); // playful convention
+                return;
+            }
+
+            const { letter, rounds } = flames(n);
+            renderSteps(a, b, remainingA, remainingB, n, rounds);
+            showResult(letter);
+        }
+
+        // Bindings
+        document.getElementById('btnCalc').addEventListener('click', calculate);
+        document.getElementById('btnSwap').addEventListener('click', () => {
+            const n1 = el('name1');
+            const n2 = el('name2');
+            [n1.value, n2.value] = [n2.value, n1.value];
+        });
+        document.getElementById('btnReset').addEventListener('click', () => {
+            el('name1').value = '';
+            el('name2').value = '';
+            resultBox.innerHTML = '<span class="note">Result will appear here.</span>';
+            stepsBox.innerHTML = '';
+            el('name1').focus();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                calculate();
+            }
+        });
+    </script>
+</body>
+
+</html>
