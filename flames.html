@@ -2,10 +2,9 @@
 <html lang="en">
 
 <head>
-    <!-- Primary SEO -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FLAMES Calculator — Classic Fun Game (Friends, Love, Affection, Marriage, Enemies, Siblings)</title>
+    <title>FLAMES Calculator — Classic Fun Game</title>
     <meta name="description"
         content="Play the classic FLAMES game online! Enter two names and find out if you’re Friends, Love, Affection, Marriage, Enemies, or Siblings. Purely a fun, vintage game — not serious or scientific." />
     <meta name="keywords"
@@ -13,12 +12,10 @@
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#ff9f1a" />
 
-    <!-- Open Graph (optional but helpful) -->
     <meta property="og:title" content="FLAMES Calculator — Classic Fun Game" />
     <meta property="og:description" content="Enter two names and see your FLAMES result. Just for fun — not serious!" />
     <meta property="og:type" content="website" />
 
-    <!-- FAQ Structured Data -->
     <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,17 +50,14 @@
   </script>
 
     <style>
-        /* THEME VARIABLES */
+        /* CSS for a single, consistent theme */
         :root {
-            /* Light theme (auto when user's system is light) */
             --bg: #fffaf2;
             --card: #fff4e0;
             --ink: #1e1400;
             --muted: #6b5b3e;
             --accent: #ff9f1a;
-            /* orange */
             --accent-2: #ffd166;
-            /* gold */
             --good: #1ecb4f;
             --bad: #ff3b3b;
             --outline: rgba(0, 0, 0, .08);
@@ -75,52 +69,6 @@
             --result-dash: rgba(0, 0, 0, .2);
             --radial-1: #ffe0b2;
             --radial-2: #ffebc2;
-        }
-
-        /* Dark palette (will be enabled by [data-theme="dark"] or system pref) */
-        [data-theme="dark"] {
-            --bg: #0f0f12;
-            --card: #16171c;
-            --ink: #f7f3ea;
-            --muted: #d8c9aa;
-            --accent: #ff9f1a;
-            /* orange */
-            --accent-2: #ffd166;
-            /* gold */
-            --good: #70e000;
-            --bad: #ff4d4d;
-            --outline: rgba(255, 255, 255, .06);
-            --outline-strong: rgba(255, 255, 255, .12);
-            --chip-outline: rgba(255, 255, 255, .16);
-            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-            --input-bg: #0e0f14;
-            --btn-ghost: #1a1b21;
-            --result-dash: rgba(255, 255, 255, .2);
-            --radial-1: #2a1f0b;
-            --radial-2: #1f1b0b;
-        }
-
-        /* Respect system preference by default; JS can override with [data-theme] */
-        @media (prefers-color-scheme: dark) {
-            :root:not([data-user-theme]) {
-                --bg: #0f0f12;
-                --card: #16171c;
-                --ink: #f7f3ea;
-                --muted: #d8c9aa;
-                --accent: #ff9f1a;
-                --accent-2: #ffd166;
-                --good: #70e000;
-                --bad: #ff4d4d;
-                --outline: rgba(255, 255, 255, .06);
-                --outline-strong: rgba(255, 255, 255, .12);
-                --chip-outline: rgba(255, 255, 255, .16);
-                --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-                --input-bg: #0e0f14;
-                --btn-ghost: #1a1b21;
-                --result-dash: rgba(255, 255, 255, .2);
-                --radial-1: #2a1f0b;
-                --radial-2: #1f1b0b;
-            }
         }
 
         * {
@@ -160,6 +108,16 @@
             position: relative;
             text-align: center;
             padding: 12px 8px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .header-top-bar {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 10px;
         }
 
         h1 {
@@ -176,30 +134,7 @@
             font-weight: 700;
             font-size: 12px;
             letter-spacing: .1em;
-            box-shadow: var(--shadow)
-        }
-
-        /* theme toggle */
-        .theme-toggle {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--card);
-            color: var(--ink);
-            border: 1px solid var(--outline);
-            padding: 8px 12px;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 700;
             box-shadow: var(--shadow);
-        }
-
-        .theme-toggle:hover {
-            filter: brightness(1.03)
         }
 
         .grid {
@@ -261,11 +196,6 @@
             transition: transform .06s ease, filter .2s ease, background .2s ease;
         }
 
-        [data-theme="dark"] button {
-            background: #23242b;
-            color: var(--ink);
-        }
-
         button:hover {
             filter: brightness(1.06)
         }
@@ -322,10 +252,6 @@
             margin-top: 12px;
         }
 
-        [data-theme="dark"] details {
-            background: #121318;
-        }
-
         summary {
             cursor: pointer;
             font-weight: 700
@@ -368,11 +294,6 @@
             text-align: center;
         }
 
-        [data-theme="dark"] .disclaimer {
-            color: #fff;
-        }
-
-        /* Simple ad placeholders */
         .ad-box {
             margin: 16px 0;
             border: 1px dashed var(--outline-strong);
@@ -390,56 +311,62 @@
             font-size: 12px;
             margin-top: 20px
         }
-     .header-buttons-container {
-  position: absolute;
-  top: 0;
-  left: 0; /* Changed from 'right: 0' to 'left: 0' */
-  display: flex;
-  gap: 10px;
-  z-index: 10;
+    
+/* === Responsive Fixes === */
+input[type="text"], input[type="password"], button {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
-.ad-box {
-      margin: 16px 0;
-      border: 1px dashed var(--outline-strong);
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    </style>
+
+.container {
+  width: min(95%, 900px);
+  margin: auto;
+  padding: 12px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  .card {
+    padding: 14px;
+  }
+  .word-display, .word, .big-letter {
+    font-size: 1.5rem !important;
+  }
+}
+  .header-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+</style>
 </head>
 
 <body>
     <div class="container">
         <header>
-             <div class="header-buttons-container">
-        <a href="index.html" class="theme-toggle" style="text-decoration: none;">
-            <span id="homeIcon" aria-hidden="true">🏠</span>
-            <span id="homeLabel">Home</span>
-        </a>
-        </div>
-            <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle light/dark">
-                <span id="themeIcon" aria-hidden="true">🌙</span>
-                <span id="themeLabel">Dark</span>
-            </button>
-
-            <div class="tag">VINTAGE GAME • JUST FOR FUN</div>
+           <div class="header-buttons-container">
+                <a href="index.html" class="btn-ghost" style="text-decoration: none; display: flex; align-items: center; padding: 8px 12px; border-radius: 999px; font-weight: 700; gap: 8px;">
+                    <span aria-hidden="true">🏠</span>
+                    <span>Home</span>
+                </a>
+            </div>
+            <div class="header-top-bar">
+                <div class="tag">VINTAGE GAME • JUST FOR FUN</div>
+            </div>
             <h1>FLAMES Calculator</h1>
             <p class="note">Enter two names and see your FLAMES result. This is a nostalgic pastime and
                 <strong>not</strong> a scientific or serious tool.</p>
 
-            <!-- AdSense Placeholder: Header (replace with your AdSense code when approved) -->
             <div class="ad-box">Header Ad Placeholder (728x90 / responsive)</div>
-            <!-- Example AdSense snippet to paste when ready:
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-CLIENT-ID" crossorigin="anonymous"></script>
-      <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-CLIENT-ID" data-ad-slot="SLOT-ID" data-ad-format="auto" data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      -->
         </header>
 
         <div class="grid">
-            <!-- Left: Calculator -->
             <section class="card" aria-labelledby="calc-title">
                 <h2 id="calc-title" style="margin-top:0">Calculator</h2>
                 <label for="name1">Your Name</label>
@@ -463,7 +390,6 @@
                 </details>
             </section>
 
-            <!-- Right: Info -->
             <aside class="card" aria-labelledby="info-title">
                 <h2 id="info-title" style="margin-top:0">What does FLAMES mean?</h2>
                 <p class="note">Traditionally, each letter stands for a type of relationship:</p>
@@ -492,78 +418,17 @@
                     acknowledgement, prediction, or advice.
                 </div>
 
-                <!-- AdSense Placeholder: Sidebar/Box -->
                 <div class="ad-box">Sidebar/Box Ad Placeholder (300x250 / responsive)</div>
             </aside>
         </div>
 
         <footer>
-            <!-- Footer Ad -->
             <div class="ad-box">Footer Ad Placeholder (responsive)</div>
             Built with plain HTML, CSS, and JavaScript. No tracking, no storage — everything runs in your browser.
         </footer>
     </div>
 
     <script>
-        /* ========= THEME (system default + manual toggle with persistence) ========= */
-        (function initTheme() {
-            const root = document.documentElement;
-            const saved = localStorage.getItem('flames-theme'); // 'light' | 'dark' | null
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-            function applyTheme(mode, fromUser = false) {
-                if (mode === 'dark') {
-                    root.setAttribute('data-theme', 'dark');
-                    root.setAttribute('data-user-theme', 'true');
-                    themeToggle.setAttribute('aria-pressed', 'true');
-                    themeIcon.textContent = '☀️';
-                    themeLabel.textContent = 'Light';
-                    if (fromUser) localStorage.setItem('flames-theme', 'dark');
-                } else if (mode === 'light') {
-                    root.removeAttribute('data-theme'); // fall back to light variables
-                    root.setAttribute('data-user-theme', 'true');
-                    themeToggle.setAttribute('aria-pressed', 'false');
-                    themeIcon.textContent = '🌙';
-                    themeLabel.textContent = 'Dark';
-                    if (fromUser) localStorage.setItem('flames-theme', 'light');
-                } else {
-                    // system default
-                    root.removeAttribute('data-user-theme');
-                    prefersDark ? root.setAttribute('data-theme', 'dark') : root.removeAttribute('data-theme');
-                    themeToggle.setAttribute('aria-pressed', prefersDark ? 'true' : 'false');
-                    themeIcon.textContent = prefersDark ? '☀️' : '🌙';
-                    themeLabel.textContent = prefersDark ? 'Light' : 'Dark';
-                    localStorage.removeItem('flames-theme');
-                }
-            }
-
-            // Elements
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const themeLabel = document.getElementById('themeLabel');
-
-            // Initial apply (respect saved > system)
-            if (saved === 'dark' || saved === 'light') {
-                applyTheme(saved, false);
-            } else {
-                applyTheme(null, false); // system
-            }
-
-            // Toggle behavior: cycles between user light/dark (not system auto)
-            themeToggle.addEventListener('click', () => {
-                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                applyTheme(isDark ? 'light' : 'dark', true);
-            });
-
-            // If system changes and user has NOT set a preference, update
-            if (window.matchMedia) {
-                const mq = window.matchMedia('(prefers-color-scheme: dark)');
-                mq.addEventListener?.('change', () => {
-                    if (!localStorage.getItem('flames-theme')) applyTheme(null, false);
-                });
-            }
-        })();
-
         /* ====================== FLAMES CALCULATOR LOGIC ======================= */
         const el = (id) => document.getElementById(id);
         const resultBox = el('result');
@@ -581,8 +446,8 @@
         function sanitizeName(str) {
             return (str || '')
                 .toLowerCase()
-                .normalize('NFD').replace(/\p{Diacritic}/gu, '') // strip diacritics
-                .replace(/[^a-z]/g, ''); // keep letters only
+                .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+                .replace(/[^a-z]/g, '');
         }
 
         function strikeCommonLetters(a, b) {
@@ -606,9 +471,9 @@
             let idx = 0;
             const rounds = [];
             while (arr.length > 1) {
-                idx = (idx + count - 1) % arr.length;    // removal index
+                idx = (idx + count - 1) % arr.length;
                 rounds.push({ removed: arr[idx], idx, before: arr.join('') });
-                arr.splice(idx, 1);                        // remove
+                arr.splice(idx, 1);
             }
             return { letter: arr[0], rounds };
         }
@@ -619,9 +484,6 @@
             ).join('');
 
             const rHtml = rounds.map((r, i) => {
-                // const pre = r.before.split('').map((ch, k) =>
-                //   `<span class="chip ${k===r.idx? 'active':''}" style="margin:4px 6px 4px 0">${ch}</span>`
-                // ).join('');
                 const pre = `<div class="round-row">` +
                     r.before.split('').map((ch, k) =>
                         `<span class="chip ${k === r.idx ? 'active' : ''}">${ch}</span>`
@@ -669,7 +531,7 @@
 
             if (n === 0) {
                 renderSteps(a, b, remainingA, remainingB, n, []);
-                showResult('L'); // playful convention
+                showResult('L');
                 return;
             }
 

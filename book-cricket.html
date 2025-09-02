@@ -2,781 +2,738 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Book Cricket — Vintage Fun</title>
-  <meta name="theme-color" content="#ff9f1a" />
-  <style>
-    :root {
-      --bg: #fffaf2;
-      --card: #fff4e0;
-      --ink: #1e1400;
-      --muted: #6b5b3e;
-      --accent: #ff9f1a;
-      --accent-2: #ffd166;
-      --good: #1ecb4f;
-      --bad: #ff3b3b;
-      --outline: rgba(0, 0, 0, .08);
-      --shadow: 0 10px 30px rgba(0, 0, 0, .15);
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Book Cricket — Vintage Fun</title>
+    <meta name="theme-color" content="#ff9f1a" />
+    <style>
+        :root {
+            --bg: #fffaf2;
+            --card: #fff4e0;
+            --ink: #1e1400;
+            --muted: #6b5b3e;
+            --accent: #ff9f1a;
+            --accent-2: #ffd166;
+            --good: #1ecb4f;
+            --bad: #ff3b3b;
+            --outline: rgba(0, 0, 0, .08);
+            --shadow: 0 10px 30px rgba(0, 0, 0, .15);
+        }
 
-    [data-theme="dark"] {
-      --bg: #0f0f12;
-      --card: #16171c;
-      --ink: #f7f3ea;
-      --muted: #d8c9aa;
-      --accent: #ff9f1a;
-      --accent-2: #ffd166;
-      --outline: rgba(255, 255, 255, .08);
-      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
-    }
+        * {
+            box-sizing: border-box
+        }
 
-    * {
-      box-sizing: border-box
-    }
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            background: var(--bg);
+            color: var(--ink);
+            padding: 20px;
+            min-height: 100vh;
+        }
 
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: var(--bg);
-      color: var(--ink);
-      padding: 20px;
-      transition: background .2s ease, color .2s ease;
-      min-height: 100vh;
-    }
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            width: 100%
+        }
 
-    .container {
-      max-width: 980px;
-      margin: 0 auto;
-      width: 100%
-    }
-
-    header {
-      position: relative;
-      text-align: center;
-      padding-top: 8px
-    }
-
-    h1 {
-      margin: 6px 0 8px;
-      font-size: clamp(20px, 3.6vw, 34px);
-      letter-spacing: .01em
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 6px 10px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #101012;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 12px;
-      box-shadow: var(--shadow)
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--card);
-      border: 1px solid var(--outline);
-      cursor: pointer;
-      font-weight: 700
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--outline);
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 18px;
-      box-shadow: var(--shadow)
-    }
-
-    label {
-      display: block;
-      color: var(--muted);
-      margin: 8px 0 6px
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--outline);
-      background: transparent;
-      color: var(--ink);
-      font-size: 15px
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px
-    }
-
-    button {
-      appearance: none;
-      border: none;
-      cursor: pointer;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #101012;
-      box-shadow: var(--shadow)
-    }
-
-    .btn-ghost {
-      background: var(--card);
-      border: 1px solid var(--outline);
-      color: var(--ink);
-      font-weight: 700
-    }
-
-    .btn-sm {
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-weight: 700
-    }
-
-    .book {
-      font-size: 64px;
-      margin: 18px auto;
-      text-align: center;
-      transition: transform .45s ease;
-      user-select: none
-    }
-
-    .book.open {
-      transform: rotateY(180deg)
-    }
-
-    .note {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 8px
-    }
-
-    .scoreboard {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      margin-top: 12px
-    }
-
-    .scorebox {
-      background: transparent;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px dashed var(--outline);
-      min-width: 120px;
-      text-align: center
-    }
-
-    .logs {
-      margin-top: 14px;
-      display: grid;
-      gap: 10px
-    }
-
-    .log-wrap {
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--outline);
-      background: linear-gradient(180deg, rgba(255, 255, 255, .02), transparent)
-    }
-
-    .log-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      cursor: pointer;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #101012
-    }
-
-    .log-box {
-      padding: 10px 12px;
-      background: var(--card);
-      max-height: 200px;
-      overflow: auto;
-      display: none;
-      font-size: 13px;
-      color: var(--ink)
-    }
-
-    .leaderboard table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px
-    }
-
-    .leaderboard th,
-    .leaderboard td {
-      border: 1px solid var(--outline);
-      padding: 8px;
-      text-align: center
-    }
-
-    .leaderboard th {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #101012;
-      font-weight: 800
-    }
-
-    /* Winner modal & confetti */
-    .winner-modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      place-items: center;
-      background: rgba(0, 0, 0, .36);
-      z-index: 80
-    }
-
-    .winner-card {
-      width: min(640px, 94%);
-      background: var(--card);
-      color: var(--ink);
-      border-radius: 16px;
-      border: 1px solid var(--outline);
-      padding: 20px;
-      text-align: center;
-      position: relative;
-      box-shadow: var(--shadow);
-      overflow: hidden
-    }
-
-    .winner-title {
-      font-size: clamp(20px, 3.5vw, 32px);
-      font-weight: 900;
-      margin: 0 0 6px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent
-    }
-
-    .winner-sub {
-      color: var(--muted);
-      margin-bottom: 12px
-    }
-
-    .winner-close {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      border: none;
-      background: transparent;
-      font-size: 22px;
-      cursor: pointer;
-      color: var(--muted);
-      font-weight: 900
-    }
-
-    .confetti {
-      position: absolute;
-      top: -20px;
-      width: 10px;
-      height: 14px;
-      opacity: .9;
-      border-radius: 2px;
-      transform: translateY(-100px) rotate(0deg);
-      animation: confettiFall linear forwards
-    }
-
-    @keyframes confettiFall {
-      to {
-        transform: translateY(700px) rotate(360deg);
-        opacity: 0
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce) {
-      .book {
-        transition: none
-      }
-
-      .confetti {
-        display: none
-      }
-    }
-
-    /* dark mode readable tables/logs */
-    [data-theme="dark"] .log-box,
-    [data-theme="dark"] .log-item,
-    [data-theme="dark"] .leaderboard td,
-    [data-theme="dark"] .leaderboard th {
-      color: var(--ink);
-    }
-    
-    /* FIX: The theme toggle button color in dark mode */
-    [data-theme="dark"] .theme-toggle {
-        background: var(--card);
-        border: 1px solid var(--outline);
-        /* Changed color to be visible on dark background */
-        color: var(--ink);
-    }
-    .header-buttons-container {
-  position: absolute;
-  top: 0;
-  left: 0; /* Changed from 'right: 0' to 'left: 0' */
+       header {
+  text-align: center;
+  padding: 16px 8px;
   display: flex;
-  gap: 10px;
-  z-index: 10;
+  flex-direction: column;
+  gap: 12px;
 }
 
-  </style>
+.header-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+h1 {
+  margin: 6px 0;
+  font-size: clamp(22px, 5vw, 34px);
+  letter-spacing: .01em;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #101012;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: clamp(11px, 2vw, 13px);
+  box-shadow: var(--shadow);
+}
+
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--outline);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 18px;
+            box-shadow: var(--shadow)
+        }
+
+        label {
+            display: block;
+            color: var(--muted);
+            margin: 8px 0 6px
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--outline);
+            background: transparent;
+            color: var(--ink);
+            font-size: 15px
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        button {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012;
+            box-shadow: var(--shadow)
+        }
+
+        .btn-ghost {
+            background: var(--card);
+            border: 1px solid var(--outline);
+            color: var(--ink);
+            font-weight: 700
+        }
+
+        .btn-sm {
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 700
+        }
+
+        .book {
+            font-size: 64px;
+            margin: 18px auto;
+            text-align: center;
+            transition: transform .45s ease;
+            user-select: none
+        }
+
+        .book.open {
+            transform: rotateY(180deg)
+        }
+
+        .note {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 8px
+        }
+
+        .scoreboard {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px
+        }
+
+        .scorebox {
+            background: transparent;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px dashed var(--outline);
+            min-width: 120px;
+            text-align: center
+        }
+
+        .logs {
+            margin-top: 14px;
+            display: grid;
+            gap: 10px
+        }
+
+        .log-wrap {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--outline);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .02), transparent)
+        }
+
+        .log-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012
+        }
+
+        .log-box {
+            padding: 10px 12px;
+            background: var(--card);
+            max-height: 200px;
+            overflow: auto;
+            display: none;
+            font-size: 13px;
+            color: var(--ink)
+        }
+
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px
+        }
+
+        .leaderboard th,
+        .leaderboard td {
+            border: 1px solid var(--outline);
+            padding: 8px;
+            text-align: center
+        }
+
+        .leaderboard th {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #101012;
+            font-weight: 800
+        }
+
+        /* Winner modal & confetti */
+        .winner-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            place-items: center;
+            background: rgba(0, 0, 0, .36);
+            z-index: 80
+        }
+
+        .winner-card {
+            width: min(640px, 94%);
+            background: var(--card);
+            color: var(--ink);
+            border-radius: 16px;
+            border: 1px solid var(--outline);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow);
+            overflow: hidden
+        }
+
+        .winner-title {
+            font-size: clamp(20px, 3.5vw, 32px);
+            font-weight: 900;
+            margin: 0 0 6px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .winner-sub {
+            color: var(--muted);
+            margin-bottom: 12px
+        }
+
+        .winner-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            border: none;
+            background: transparent;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--muted);
+            font-weight: 900
+        }
+
+        .confetti {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 14px;
+            opacity: .9;
+            border-radius: 2px;
+            transform: translateY(-100px) rotate(0deg);
+            animation: confettiFall linear forwards
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(700px) rotate(360deg);
+                opacity: 0
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            .book {
+                transition: none
+            }
+
+            .confetti {
+                display: none
+            }
+        }
+    
+/* === Responsive Fixes === */
+input[type="text"], input[type="password"], button {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.container {
+  width: min(95%, 900px);
+  margin: auto;
+  padding: 12px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+  h1 {
+    font-size: 1.4rem;
+  }
+  .card {
+    padding: 14px;
+  }
+  .note {
+    font-size: 12px;
+  }
+}
+
+
+
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <header>
-       <div class="header-buttons-container">
-        <a href="index.html" class="theme-toggle" style="text-decoration: none;">
-            <span id="homeIcon" aria-hidden="true">🏠</span>
-            <span id="homeLabel">Home</span>
-        </a>
-        </div>
-        <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle light/dark">
-            <span id="themeIcon" aria-hidden="true">🌙</span>
-            <span id="themeLabel">Dark</span>
-        </button>
-    
-    
-      <div class="tag">VINTAGE GAME • JUST FOR FUN</div>
-      <h1>Book Cricket</h1>
-      <p class="note">Open the “book” to score runs. 0 = OUT. Each innings ends after <strong>2 wickets</strong> or
-        <strong>limited overs</strong>. (6 balls per over)</p>
-      <!-- AdSense Placeholder: Header (replace with your AdSense code when approved)
-            <div class="ad-box">Header Ad Placeholder (728x90 / responsive)</div>    -->
-    </header>
+    <div class="container">
+        <header>
+            <div class="header-buttons-container">
+                <a href="index.html" class="btn-ghost" style="text-decoration: none; display: flex; align-items: center; padding: 8px 12px; border-radius: 999px; font-weight: 700; gap: 8px;">
+                    <span aria-hidden="true">🏠</span>
+                    <span>Home</span>
+                </a>
+            </div>
+            <div class="tag">VINTAGE GAME • JUST FOR FUN</div>
+            <h1>Book Cricket</h1>
+            <p class="note">Open the “book” to score runs. 0 = OUT. Each innings ends after <strong>2 wickets</strong> or
+                <strong>limited overs</strong>. (6 balls per over)</p>
+            </header>
 
-    <section class="card" id="setup">
-      <h2>Enter Players & Settings</h2>
-      <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr;">
-        <input id="player1" type="text" placeholder="Player 1 name" />
-        <input id="player2" type="text" placeholder="Player 2 name" />
-      </div>
+        <section class="card" id="setup">
+            <h2>Enter Players & Settings</h2>
+            <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr;">
+                <input id="player1" type="text" placeholder="Player 1 name" />
+                <input id="player2" type="text" placeholder="Player 2 name" />
+            </div>
 
-      <div style="display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap">
-        <label style="font-weight:700">Overs / innings</label>
-        <input id="oversInput" type="number" min="1" max="20" value="2" style="width:96px" />
-        <button id="btnStart">Start Match</button>
-      </div>
-      <p class="note">Leave names blank to use defaults. You can skip innings during play with <em>Skip/Innings</em>.
-      </p>
-    </section>
+            <div style="display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap">
+                <label style="font-weight:700">Overs / innings</label>
+                <input id="oversInput" type="number" min="1" max="20" value="2" style="width:96px" />
+                <button id="btnStart">Start Match</button>
+            </div>
+            <p class="note">Leave names blank to use defaults. You can skip innings during play with <em>Skip/Innings</em>.
+            </p>
+        </section>
 
-    <section class="card" id="game" style="display:none">
-      <h2 id="turnLabel"></h2>
+        <section class="card" id="game" style="display:none">
+            <h2 id="turnLabel"></h2>
 
-      <div class="book" id="book">📖</div>
+            <div class="book" id="book">📖</div>
 
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button id="btnOpen">Open Book</button>
-        <button id="btnSkip" class="btn-ghost">Skip/Innings</button>
-        <button id="btnReset" class="btn-ghost">Reset Match</button>
-      </div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                <button id="btnOpen">Open Book</button>
+                <button id="btnSkip" class="btn-ghost">Skip/Innings</button>
+                <button id="btnReset" class="btn-ghost">Reset Match</button>
+            </div>
 
-      <div id="commentary" class="note" style="text-align:center;margin-top:12px">Click “Open Book” to play.</div>
+            <div id="commentary" class="note" style="text-align:center;margin-top:12px">Click “Open Book” to play.</div>
 
-      <div class="scoreboard" aria-live="polite">
-        <div class="scorebox"><strong>Score</strong>
-          <div id="scoreBox">0/0</div>
-        </div>
-        <div class="scorebox"><strong>Overs</strong>
-          <div id="oversBox">0.0</div>
-        </div>
-      </div>
+            <div class="scoreboard" aria-live="polite">
+                <div class="scorebox"><strong>Score</strong>
+                    <div id="scoreBox">0/0</div>
+                </div>
+                <div class="scorebox"><strong>Overs</strong>
+                    <div id="oversBox">0.0</div>
+                </div>
+            </div>
 
-      <div class="logs" id="liveLogs" style="margin-top:12px">
-        </div>
-    </section>
+            <div class="logs" id="liveLogs" style="margin-top:12px">
+            </div>
+        </section>
 
-    <section class="card leaderboard" id="leaderboardSection" style="display:none">
-      <h2>Leaderboard</h2>
-      <table id="leaderboardTable">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Runs</th>
-            <th>Wickets</th>
-            <th>Balls</th>
-            <th>Overs</th>
-            <th>SR</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+        <section class="card leaderboard" id="leaderboardSection" style="display:none">
+            <h2>Leaderboard</h2>
+            <table id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Runs</th>
+                        <th>Wickets</th>
+                        <th>Balls</th>
+                        <th>Overs</th>
+                        <th>SR</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
 
-      <div class="logs" id="logs" style="margin-top:12px"></div>
-    </section>
-  </div>
-
-  <div id="winnerModal" class="winner-modal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
-    <div class="winner-card">
-      <button class="winner-close" id="winnerClose" aria-label="Close">✕</button>
-      <h3 id="winnerTitle" class="winner-title">Winner!</h3>
-      <div id="winnerText" class="winner-sub"></div>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <button id="replayBtn" class="btn-ghost">🔁 Replay (same players)</button>
-        <button id="newBtn" class="btn-ghost">🆕 New Match</button>
-      </div>
+            <div class="logs" id="logs" style="margin-top:12px"></div>
+        </section>
     </div>
-  </div>
 
-  <script>
-    /* ----------------- THEME ----------------- */
-    const themeToggle = document.getElementById('themeToggle');
-    function applyTheme(mode) {
-      if (mode === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); themeToggle.textContent = '☀️ Light'; themeToggle.setAttribute('aria-pressed', 'true'); }
-      else { document.documentElement.removeAttribute('data-theme'); themeToggle.textContent = '🌙 Dark'; themeToggle.setAttribute('aria-pressed', 'false'); }
-    }
-    const saved = localStorage.getItem('bookcricket-theme');
-    if (saved) applyTheme(saved);
-    else applyTheme(window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    <div id="winnerModal" class="winner-modal" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
+        <div class="winner-card">
+            <button class="winner-close" id="winnerClose" aria-label="Close">✕</button>
+            <h3 id="winnerTitle" class="winner-title">Winner!</h3>
+            <div id="winnerText" class="winner-sub"></div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+                <button id="replayBtn" class="btn-ghost">🔁 Replay (same players)</button>
+                <button id="newBtn" class="btn-ghost">🆕 New Match</button>
+            </div>
+        </div>
+    </div>
 
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const next = isDark ? 'light' : 'dark';
-      applyTheme(next);
-      localStorage.setItem('bookcricket-theme', next);
-    });
+    <script>
+        /* ----------------- STATE ----------------- */
+        let players = [];
+        let currentPlayerIndex = 0;
+        let oversPerInnings = 2;
+        const ballsPerOver = 6;
 
-    /* ----------------- STATE ----------------- */
-    let players = [];               // {name, score, wickets, balls, log:[]}
-    let currentPlayerIndex = 0;
-    let oversPerInnings = 2;
-    const ballsPerOver = 6;
+        const els = {
+            setup: document.getElementById('setup'),
+            game: document.getElementById('game'),
+            leaderboard: document.getElementById('leaderboardSection'),
+            turnLabel: document.getElementById('turnLabel'),
+            book: document.getElementById('book'),
+            commentary: document.getElementById('commentary'),
+            scoreBox: document.getElementById('scoreBox'),
+            oversBox: document.getElementById('oversBox'),
+            logsLive: document.getElementById('liveLogs'),
+            logs: document.getElementById('logs'),
+            leaderboardBody: document.querySelector('#leaderboardTable tbody'),
+            winnerModal: document.getElementById('winnerModal'),
+            winnerTitle: document.getElementById('winnerTitle'),
+            winnerText: document.getElementById('winnerText'),
+            winnerClose: document.getElementById('winnerClose'),
+            replayBtn: document.getElementById('replayBtn'),
+            newBtn: document.getElementById('newBtn'),
+            btnStart: document.getElementById('btnStart'),
+            btnOpen: document.getElementById('btnOpen'),
+            btnSkip: document.getElementById('btnSkip'),
+            btnReset: document.getElementById('btnReset'),
+            oversInput: document.getElementById('oversInput'),
+        };
 
-    const els = {
-      setup: document.getElementById('setup'),
-      game: document.getElementById('game'),
-      leaderboard: document.getElementById('leaderboardSection'),
-      turnLabel: document.getElementById('turnLabel'),
-      book: document.getElementById('book'),
-      commentary: document.getElementById('commentary'),
-      scoreBox: document.getElementById('scoreBox'),
-      oversBox: document.getElementById('oversBox'),
-      logsLive: document.getElementById('liveLogs'),
-      logs: document.getElementById('logs'),
-      leaderboardBody: document.querySelector('#leaderboardTable tbody'),
-      winnerModal: document.getElementById('winnerModal'),
-      winnerTitle: document.getElementById('winnerTitle'),
-      winnerText: document.getElementById('winnerText'),
-      winnerClose: document.getElementById('winnerClose'),
-      replayBtn: document.getElementById('replayBtn'),
-      newBtn: document.getElementById('newBtn'),
-      btnStart: document.getElementById('btnStart'),
-      btnOpen: document.getElementById('btnOpen'),
-      btnSkip: document.getElementById('btnSkip'),
-      btnReset: document.getElementById('btnReset'),
-      oversInput: document.getElementById('oversInput'),
-    };
-
-    /* -------------- HELPERS -------------- */
-    function formatOvers(balls) {
-      const full = Math.floor(balls / ballsPerOver);
-      const b = balls % ballsPerOver;
-      return `${full}.${b}`;
-    }
-    function formatOverLabel(balls) { // Over X.Y where Y is 1..6
-      const played = balls; // balls after increment
-      const overIndex = Math.floor((played - 1) / ballsPerOver);
-      const ballNum = ((played - 1) % ballsPerOver) + 1;
-      return `${overIndex}.${ballNum}`;
-    }
-
-    /* -------------- GAME FLOW -------------- */
-    function startGame() {
-      const n1 = document.getElementById('player1').value.trim() || 'Player 1';
-      const n2 = document.getElementById('player2').value.trim() || 'Player 2';
-      oversPerInnings = Math.max(1, parseInt(els.oversInput.value || '2', 10));
-
-      players = [
-        { name: n1, score: 0, wickets: 0, balls: 0, log: [] },
-        { name: n2, score: 0, wickets: 0, balls: 0, log: [] }
-      ];
-
-      currentPlayerIndex = 0;
-      els.setup.style.display = 'none';
-      els.leaderboard.style.display = 'none';
-      els.game.style.display = 'block';
-      els.commentary.textContent = `Match started — ${players[0].name} to bat first.`;
-      renderUI();
-      renderLiveLogHeader();
-    }
-    els.btnStart.addEventListener('click', startGame);
-
-    function renderUI() {
-      const p = players[currentPlayerIndex];
-      els.turnLabel.textContent = `${p.name}'s Turn`;
-      els.scoreBox.textContent = `${p.score}/${p.wickets}`;
-      els.oversBox.textContent = formatOvers(p.balls);
-      renderLiveLog();
-    }
-
-    /* Book animation helper */
-    function animateBook() {
-      els.book.classList.add('open');
-      setTimeout(() => els.book.classList.remove('open'), 420);
-    }
-
-    /* Play one ball */
-    function openBook() {
-      if (!players.length) return;
-      const p = players[currentPlayerIndex];
-
-      // animate
-      animateBook();
-
-      const page = Math.floor(Math.random() * 500) + 1;
-      const digit = page % 10;
-
-      // increment ball count first
-      p.balls += 1;
-      const overBallLabel = `Over ${formatOverLabel(p.balls)}`;
-
-      if (digit === 0) {
-        p.wickets += 1;
-        const msg = `${p.name} — OUT (${overBallLabel})`;
-        p.log.push(`${overBallLabel}: OUT (page ${page})`);
-        els.commentary.textContent = msg;
-      } else {
-        p.score += digit;
-        p.log.push(`${overBallLabel}: +${digit} (page ${page})`);
-        els.commentary.textContent = `${p.name} scores ${digit} run${digit > 1 ? 's' : ''} (${overBallLabel})`;
-      }
-
-      renderUI();
-
-      // immediate chase finish: if batting is second player and has surpassed first player's score -> match over
-      if (currentPlayerIndex === 1) {
-        const firstScore = players[0].score;
-        if (p.score > firstScore) {
-          // second player has chased down
-          endMatchEarly(`${p.name} chased down the target!`);
-          return;
+        /* -------------- HELPERS -------------- */
+        function formatOvers(balls) {
+            const full = Math.floor(balls / ballsPerOver);
+            const b = balls % ballsPerOver;
+            return `${full}.${b}`;
         }
-      }
 
-      // end innings checks: 2 wickets or overs exhausted
-      if (p.wickets >= 2 || p.balls >= oversPerInnings * ballsPerOver) {
-        endInnings();
-      }
-    }
-    els.btnOpen.addEventListener('click', openBook);
+        function formatOverLabel(balls) {
+            const played = balls;
+            const overIndex = Math.floor((played - 1) / ballsPerOver);
+            const ballNum = ((played - 1) % ballsPerOver) + 1;
+            return `${overIndex}.${ballNum}`;
+        }
 
-    /* Skip current innings early */
-    function skipToNext() {
-      if (!players.length) return;
-      players[currentPlayerIndex].log.push(`— Innings closed early by skipper —`);
-      endInnings(true);
-    }
-    els.btnSkip.addEventListener('click', skipToNext);
+        /* -------------- GAME FLOW -------------- */
+        function startGame() {
+            const n1 = document.getElementById('player1').value.trim() || 'Player 1';
+            const n2 = document.getElementById('player2').value.trim() || 'Player 2';
+            oversPerInnings = Math.max(1, parseInt(els.oversInput.value || '2', 10));
 
-    /* Reset entire match -> back to setup */
-    function resetMatch() {
-      players = [];
-      currentPlayerIndex = 0;
-      els.setup.style.display = 'block';
-      els.game.style.display = 'none';
-      els.leaderboard.style.display = 'none';
-      els.commentary.textContent = 'Match reset. Enter players to start again.';
-      els.logs.innerHTML = '';
-      els.logsLive.innerHTML = '';
-      clearConfetti();
-    }
-    els.btnReset.addEventListener('click', resetMatch);
+            players = [{
+                name: n1,
+                score: 0,
+                wickets: 0,
+                balls: 0,
+                log: []
+            }, {
+                name: n2,
+                score: 0,
+                wickets: 0,
+                balls: 0,
+                log: []
+            }];
 
-    /* End innings and move to next player or end match */
-    function endInnings(skipped = false) {
-      // if finishing first innings, move to next player
-      if (currentPlayerIndex === 0) {
-        // close first innings
-        players[0].log.push(skipped ? '— Innings closed early' : '— Innings complete');
-        currentPlayerIndex = 1;
-        els.commentary.textContent = `${players[1].name}'s innings begins — chase target: ${players[0].score + 1}`;
-        renderUI();
-        renderLiveLogHeader();
-        return;
-      }
-      // if finishing second innings -> match over
-      players[1].log.push(skipped ? '— Innings closed early' : '— Innings complete');
-      endMatch();
-    }
+            currentPlayerIndex = 0;
+            els.setup.style.display = 'none';
+            els.leaderboard.style.display = 'none';
+            els.game.style.display = 'block';
+            els.commentary.textContent = `Match started — ${players[0].name} to bat first.`;
+            renderUI();
+            renderLiveLogHeader();
+        }
+        els.btnStart.addEventListener('click', startGame);
 
-    /* End match normally */
-    function endMatch() {
-      // show leaderboard & logs and winner modal
-      els.game.style.display = 'none';
-      els.leaderboard.style.display = 'block';
-      renderLeaderboardAndLogs();
-      determineAndShowWinner();
-    }
+        function renderUI() {
+            const p = players[currentPlayerIndex];
+            els.turnLabel.textContent = `${p.name}'s Turn`;
+            els.scoreBox.textContent = `${p.score}/${p.wickets}`;
+            els.oversBox.textContent = formatOvers(p.balls);
+            renderLiveLog();
+        }
 
-    /* End match early due to chase success */
-    function endMatchEarly(reason) {
-      // add note to log and end match immediately
-      players[currentPlayerIndex].log.push(`— Match ended: ${reason}`);
-      if (currentPlayerIndex === 1) {
-        // ensure second player's innings recorded finished
-        // leave as is
-      }
-      endMatch();
-    }
+        function animateBook() {
+            els.book.classList.add('open');
+            setTimeout(() => els.book.classList.remove('open'), 420);
+        }
 
-    /* Render live log box for current innings (auto open) */
-    function renderLiveLogHeader() {
-      els.logsLive.innerHTML = '';
-      const p = players[currentPlayerIndex];
-      const wrap = document.createElement('div');
-      wrap.className = 'log-wrap';
-      const head = document.createElement('div');
-      head.className = 'log-head';
-      head.innerHTML = `<span>📜 Live: ${p.name}'s Commentary</span><span>Live</span>`;
-      const box = document.createElement('div');
-      box.className = 'log-box';
-      box.style.display = 'block';
-      box.innerHTML = p.log.length ? p.log.map(l => `<div class="log-item">${l}</div>`).join('') : '<div class="log-item note">No deliveries yet</div>';
-      wrap.appendChild(head);
-      wrap.appendChild(box);
-      els.logsLive.appendChild(wrap);
-      box.scrollTop = box.scrollHeight;
-    }
+        function openBook() {
+            if (!players.length) return;
+            const p = players[currentPlayerIndex];
 
-    /* Update live log contents */
-    function renderLiveLog() {
-      // update live log if open
-      const box = els.logsLive.querySelector('.log-box');
-      if (box) {
-        const p = players[currentPlayerIndex];
-        box.innerHTML = p.log.length ? p.log.map(l => `<div class="log-item">${l}</div>`).join('') : '<div class="log-item note">No deliveries yet</div>';
-        box.scrollTop = box.scrollHeight;
-      }
-    }
+            animateBook();
 
-    /* Render final leaderboard & per-player collapsible logs */
-    function renderLeaderboardAndLogs() {
-      // Leaderboard sorted by runs desc
-      const sorted = [...players].sort((a, b) => b.score - a.score);
-      els.leaderboardBody.innerHTML = '';
-      sorted.forEach(p => {
-        const overs = formatOvers(p.balls);
-        const sr = p.balls > 0 ? ((p.score / p.balls) * 100).toFixed(1) : '0.0';
-        els.leaderboardBody.insertAdjacentHTML('beforeend', `<tr>
-      <td>${p.name}</td>
-      <td>${p.score}</td>
-      <td>${p.wickets}</td>
-      <td>${p.balls}</td>
-      <td>${overs}</td>
-      <td>${sr}</td>
-    </tr>`);
-      });
+            const page = Math.floor(Math.random() * 500) + 1;
+            const digit = page % 10;
 
-      // Logs
-      els.logs.innerHTML = '';
-      players.forEach((p, i) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'log-wrap';
-        const head = document.createElement('div');
-        head.className = 'log-head';
-        head.innerHTML = `<span>📜 ${p.name}'s Commentary</span><span>Show</span>`;
-        const box = document.createElement('div');
-        box.className = 'log-box';
-        box.innerHTML = p.log.length ? p.log.map(l => `<div class="log-item">${l}</div>`).join('') : '<div class="log-item note">No deliveries recorded.</div>';
-        head.addEventListener('click', () => {
-          const isOpen = box.style.display === 'block';
-          box.style.display = isOpen ? 'none' : 'block';
-          head.lastElementChild.textContent = isOpen ? 'Show' : 'Hide';
-          if (!isOpen) box.scrollTop = box.scrollHeight;
+            p.balls += 1;
+            const overBallLabel = `Over ${formatOverLabel(p.balls)}`;
+
+            if (digit === 0) {
+                p.wickets += 1;
+                const msg = `${p.name} — OUT (${overBallLabel})`;
+                p.log.push(`${overBallLabel}: OUT (page ${page})`);
+                els.commentary.textContent = msg;
+            } else {
+                p.score += digit;
+                p.log.push(`${overBallLabel}: +${digit} (page ${page})`);
+                els.commentary.textContent = `${p.name} scores ${digit} run${digit > 1 ? 's' : ''} (${overBallLabel})`;
+            }
+
+            renderUI();
+
+            if (currentPlayerIndex === 1) {
+                const firstScore = players[0].score;
+                if (p.score > firstScore) {
+                    endMatchEarly(`${p.name} chased down the target!`);
+                    return;
+                }
+            }
+
+            if (p.wickets >= 2 || p.balls >= oversPerInnings * ballsPerOver) {
+                endInnings();
+            }
+        }
+        els.btnOpen.addEventListener('click', openBook);
+
+        function skipToNext() {
+            if (!players.length) return;
+            players[currentPlayerIndex].log.push(`— Innings closed early by skipper —`);
+            endInnings(true);
+        }
+        els.btnSkip.addEventListener('click', skipToNext);
+
+        function resetMatch() {
+            players = [];
+            currentPlayerIndex = 0;
+            els.setup.style.display = 'block';
+            els.game.style.display = 'none';
+            els.leaderboard.style.display = 'none';
+            els.commentary.textContent = 'Match reset. Enter players to start again.';
+            els.logs.innerHTML = '';
+            els.logsLive.innerHTML = '';
+            clearConfetti();
+        }
+        els.btnReset.addEventListener('click', resetMatch);
+
+        function endInnings(skipped = false) {
+            if (currentPlayerIndex === 0) {
+                players[0].log.push(skipped ? '— Innings closed early' : '— Innings complete');
+                currentPlayerIndex = 1;
+                els.commentary.textContent = `${players[1].name}'s innings begins — chase target: ${players[0].score + 1}`;
+                renderUI();
+                renderLiveLogHeader();
+                return;
+            }
+            players[1].log.push(skipped ? '— Innings closed early' : '— Innings complete');
+            endMatch();
+        }
+
+        function endMatch() {
+            els.game.style.display = 'none';
+            els.leaderboard.style.display = 'block';
+            renderLeaderboardAndLogs();
+            determineAndShowWinner();
+        }
+
+        function endMatchEarly(reason) {
+            players[currentPlayerIndex].log.push(`— Match ended: ${reason}`);
+            if (currentPlayerIndex === 1) {
+                // leave as is
+            }
+            endMatch();
+        }
+
+        function renderLiveLogHeader() {
+            els.logsLive.innerHTML = '';
+            const p = players[currentPlayerIndex];
+            const wrap = document.createElement('div');
+            wrap.className = 'log-wrap';
+            const head = document.createElement('div');
+            head.className = 'log-head';
+            head.innerHTML = `<span>📜 Live: ${p.name}'s Commentary</span><span>Live</span>`;
+            const box = document.createElement('div');
+            box.className = 'log-box';
+            box.style.display = 'block';
+            box.innerHTML = p.log.length ? p.log.map(l => `<div class="log-item">${l}</div>`).join('') : '<div class="log-item note">No deliveries yet</div>';
+            wrap.appendChild(head);
+            wrap.appendChild(box);
+            els.logsLive.appendChild(wrap);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function renderLiveLog() {
+            const box = els.logsLive.querySelector('.log-box');
+            if (box) {
+                const p = players[currentPlayerIndex];
+                box.innerHTML = p.log.length ? p.log.map(l => `<div class="log-item">${l}</div>`).join('') : '<div class="log-item note">No deliveries yet</div>';
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        function renderLeaderboardAndLogs() {
+            const sorted = [...players].sort((a, b) => b.score - a.score);
+            els.leaderboardBody.innerHTML = '';
+            sorted.forEach(p => {
+                const overs = formatOvers(p.balls);
+                const sr = p.balls > 0 ? ((p.score / p.balls) * 100).toFixed(1) : '0.0';
+                els.leaderboardBody.insertAdjacentHTML('beforeend', `<tr>
+            <td>${p.name}</td>
+            <td>${p.score}</td>
+            <td>${p.wickets}</td>
+            <td>${p.balls}</td>
+            <td>${overs}</td>
+            <td>${sr}</td>
+          </tr>`);
+            });
+
+            els.logs.innerHTML = '';
+            players.forEach((p, i) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'log-wrap';
+                const head = document.createElement('div');
+                head.className = 'log-head';
+                head.innerHTML = `<span>📜 ${p.name}'s Commentary</span><span>Show</span>`;
+                const box = document.createElement('div');
+                box.className = 'log-box';
+                box.innerHTML = p.log.length ? p.log.map(l => `<div class="log-item">${l}</div>`).join('') : '<div class="log-item note">No deliveries recorded.</div>';
+                head.addEventListener('click', () => {
+                    const isOpen = box.style.display === 'block';
+                    box.style.display = isOpen ? 'none' : 'block';
+                    head.lastElementChild.textContent = isOpen ? 'Show' : 'Hide';
+                    if (!isOpen) box.scrollTop = box.scrollHeight;
+                });
+                wrap.appendChild(head);
+                wrap.appendChild(box);
+                els.logs.appendChild(wrap);
+            });
+        }
+
+        function determineAndShowWinner() {
+            let winnerText = '';
+            if (players[0].score > players[1].score) {
+                els.winnerTitle.textContent = `🏆 ${players[0].name} Wins!`;
+                winnerText = `${players[0].score} — ${players[1].score}`;
+            } else if (players[1].score > players[0].score) {
+                els.winnerTitle.textContent = `🏆 ${players[1].name} Wins!`;
+                winnerText = `${players[1].score} — ${players[0].score}`;
+            } else {
+                els.winnerTitle.textContent = `🤝 It's a Tie!`;
+                winnerText = `${players[0].score} — ${players[1].score}`;
+            }
+            els.winnerText.textContent = winnerText;
+            els.winnerModal.style.display = 'grid';
+            makeConfetti(120);
+        }
+
+        els.winnerClose.addEventListener('click', () => {
+            els.winnerModal.style.display = 'none';
+            clearConfetti();
         });
-        wrap.appendChild(head);
-        wrap.appendChild(box);
-        els.logs.appendChild(wrap);
-      });
-    }
+        els.replayBtn.addEventListener('click', () => {
+            players.forEach(p => {
+                p.score = 0;
+                p.wickets = 0;
+                p.balls = 0;
+                p.log = [];
+            });
+            currentPlayerIndex = 0;
+            els.winnerModal.style.display = 'none';
+            clearConfetti();
+            els.leaderboard.style.display = 'none';
+            els.game.style.display = 'block';
+            els.commentary.textContent = `${players[0].name} to bat — new match (same players).`;
+            renderUI();
+            renderLiveLogHeader();
+        });
+        els.newBtn.addEventListener('click', () => {
+            els.winnerModal.style.display = 'none';
+            clearConfetti();
+            els.leaderboard.style.display = 'none';
+            els.game.style.display = 'none';
+            els.setup.style.display = 'block';
+            document.getElementById('player1').focus();
+        });
 
-    /* Determine winner and show modal + confetti */
-    function determineAndShowWinner() {
-      let winnerText = '';
-      if (players[0].score > players[1].score) {
-        els.winnerTitle.textContent = `🏆 ${players[0].name} Wins!`;
-        winnerText = `${players[0].score} — ${players[1].score}`;
-      } else if (players[1].score > players[0].score) {
-        els.winnerTitle.textContent = `🏆 ${players[1].name} Wins!`;
-        winnerText = `${players[1].score} — ${players[0].score}`;
-      } else {
-        els.winnerTitle.textContent = `🤝 It's a Tie!`;
-        winnerText = `${players[0].score} — ${players[1].score}`;
-      }
-      els.winnerText.textContent = winnerText;
-      els.winnerModal.style.display = 'grid';
-      makeConfetti(120);
-    }
+        function makeConfetti(n = 80) {
+            const modal = els.winnerModal.querySelector('.winner-card');
+            for (let i = 0; i < n; i++) {
+                const c = document.createElement('span');
+                c.className = 'confetti';
+                const size = 6 + Math.random() * 14;
+                c.style.width = `${size}px`;
+                c.style.height = `${size * 1.2}px`;
+                c.style.left = `${Math.random() * 100}%`;
+                c.style.background = Math.random() > .5 ? 'linear-gradient(135deg,var(--accent),var(--accent-2))' : 'linear-gradient(135deg,#ffd166,#fff4e0)';
+                c.style.animationDuration = `${2 + Math.random() * 2}s`;
+                c.style.animationDelay = `${Math.random() * 0.8}s`;
+                c.style.transform = `translateY(-120px) rotate(${Math.random() * 360}deg)`;
+                modal.appendChild(c);
+            }
+        }
 
-    /* ----------------- Winner modal actions ----------------- */
-    els.winnerClose.addEventListener('click', () => { els.winnerModal.style.display = 'none'; clearConfetti(); });
-    els.replayBtn.addEventListener('click', () => { // keep names, reset scores
-      players.forEach(p => { p.score = 0; p.wickets = 0; p.balls = 0; p.log = []; });
-      currentPlayerIndex = 0;
-      els.winnerModal.style.display = 'none';
-      clearConfetti();
-      els.leaderboard.style.display = 'none';
-      els.game.style.display = 'block';
-      els.commentary.textContent = `${players[0].name} to bat — new match (same players).`;
-      renderUI();
-      renderLiveLogHeader();
-    });
-    els.newBtn.addEventListener('click', () => {
-      els.winnerModal.style.display = 'none';
-      clearConfetti();
-      // back to setup
-      els.leaderboard.style.display = 'none';
-      els.game.style.display = 'none';
-      els.setup.style.display = 'block';
-      document.getElementById('player1').focus();
-    });
+        function clearConfetti() {
+            document.querySelectorAll('.confetti').forEach(el => el.remove());
+        }
 
-    /* ----------------- Confetti ----------------- */
-    function makeConfetti(n = 80) {
-      const modal = els.winnerModal.querySelector('.winner-card');
-      for (let i = 0; i < n; i++) {
-        const c = document.createElement('span');
-        c.className = 'confetti';
-        const size = 6 + Math.random() * 14;
-        c.style.width = `${size}px`;
-        c.style.height = `${size * 1.2}px`;
-        c.style.left = `${Math.random() * 100}%`;
-        c.style.background = Math.random() > .5 ? 'linear-gradient(135deg,var(--accent),var(--accent-2))' : 'linear-gradient(135deg,#ffd166,#fff4e0)';
-        c.style.animationDuration = `${2 + Math.random() * 2}s`;
-        c.style.animationDelay = `${Math.random() * 0.8}s`;
-        c.style.transform = `translateY(-120px) rotate(${Math.random() * 360}deg)`;
-        modal.appendChild(c);
-      }
-    }
-    function clearConfetti() { document.querySelectorAll('.confetti').forEach(el => el.remove()); }
-
-    /* ----------------- Accessibility: keyboard Enter starts openBook when game visible ----------------- */
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && els.game.style.display === 'block') {
-        // if input focus inside setup ignore
-        const active = document.activeElement;
-        if (active && (active.tagName === 'INPUT')) return;
-        e.preventDefault();
-        openBook();
-      }
-    });
-  </script>
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && els.game.style.display === 'block') {
+                const active = document.activeElement;
+                if (active && (active.tagName === 'INPUT')) return;
+                e.preventDefault();
+                openBook();
+            }
+        });
+    </script>
 </body>
 
 </html>
